@@ -1,23 +1,28 @@
-import {createUseStyles} from 'react-jss';
+import jss from 'jss'
+import preset from 'jss-preset-default'
 import 'reset-css'
 
-const  useStyles = createUseStyles ({
+jss.setup(preset())
+
+const styles = {
     wrapper: {
         width: '418px',
-        height: '264px',
+        height: '268px',
         border: '1px solid #f4f4f4',
         padding: '5px',
-        margin: '0 auto',
+        margin: '0 auto 40px;',
+        boxShadow: '0 4px 15px 0 rgba(0, 0, 0, .25)',
+        boxSizing: 'border-box'
     },
     formControl: {
-      minHeight: '140px',
-      width: "400px",
-      resize: 'none',
-      margin: '0 auto',
-      border: 'none',
-      padding: '5px',
-      display: 'block',
-      boxSizing: 'border-box'
+        minHeight: '140px',
+        width: "400px",
+        resize: 'none',
+        margin: '0 auto',
+        border: 'none',
+        padding: '5px',
+        display: 'block',
+        boxSizing: 'border-box'
     },
     customSelect: {
         width: '400px',
@@ -45,6 +50,7 @@ const  useStyles = createUseStyles ({
         backgroundColor: '#f4f4f4',
         border: 'none',
         color: '#000000',
+        cursor: 'pointer',
     },
     container: {
         textTransform: 'uppercase',
@@ -53,7 +59,8 @@ const  useStyles = createUseStyles ({
         width: '530px',
         margin: '24px auto',
     }
+}
 
-})
+const { classes } = jss.createStyleSheet(styles).attach();
 
-export default useStyles;
+export default classes;
