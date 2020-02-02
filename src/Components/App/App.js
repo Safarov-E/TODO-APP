@@ -28,28 +28,47 @@ class App extends Component {
           description: 'Описание задачи',
           executor: 'Исполнитель',
           id: 3,
-          priority: null
+          priority: 0
         },
       ]
     } 
   }
-  handlerSubmit = (event) => {
+  getId() {
+    this._id = !this._id ? 4 : this._id += 1;
+    return this._id;
+  } 
+  handleSubmit = (event) => {
     event.preventDefault();
-    let idInc = 0;
-    if(this.state.description.trim().length > 10 && this.state.priority !== '' && this.state.executorValue !== '') {
+    const isDescription = this.state.description.trim().length > 10;
+    const isPriority = this.state.priority !== '';
+    const isExecutorValue = this.state.executorValue !== '';
+
+    const textArea = event.target.querySelector(`.${classes.formControl}`);
+    if(!isDescription) textArea.classList.add(classes.error); 
+
+    const selectError = event.target.querySelector(`.${classes.customSelect}`);
+    if(!isExecutorValue) selectError.classList.add(classes.error);
+
+    if(isDescription && isPriority && isExecutorValue) {
       const item = {
-          description: this.state.description,
-          executor: this.state.executorValue,
-          priority: this.state.priority,
-          id: idInc++,
+        description: this.state.description,
+        executor: this.state.executorValue,
+        priority: this.state.priority,
+        id: this.getId(),
       }
-      const array = [item, ...this.state.data];
+      const array = [item, ...this.state.data]; 
       this.setState({
-          data: array
+          data: array,
+          description: '',
+          executor: ['Не выбрано', 'Николай', 'Иван', 'Святослав', 'Михаил', 'Анатолий'],
+          priority: 0,
+          executorValue: '',
       })
+      textArea.classList.remove(classes.error);
+      selectError.classList.remove(classes.error);
     }
   }
-  handlerChangeInput = (event) => {
+  handleChangeInput = (event) => {
     var value = Number(event.target.value);
     if (value >= 0 && value <= 10 ) {
       this.setState({
@@ -57,26 +76,57 @@ class App extends Component {
       }) 
     }
   }
-  handlerChangeTextarea = (event) => { 
+  handleChangeTextarea = (event) => { 
     var value = event.target.value;
     if(value !== '') {
       this.setState({
         description: event.target.value
-      })
-    }
+      }) 
+    }  
   }
-  handlerCustomSelect = (event) => {
+  handleCustomSelect = (event) => {
     this.setState({
       executorValue: event.target.value
     })
   }
+  handleDelete = (id) => {
+    const data = this.state.data.filter(item => {
+      return item.id !== id;
+    })
+    this.setState({
+      data: data
+    })
+  }
+  handleRaise = (id) => {
+    const data = this.state.data.map(item => {
+      if(item.id === id) {
+        item.priority += 1
+      }
+      return item 
+    })
+    this.setState({
+      data: data
+    })
+  }
+  handleLower = (id) => {
+    const data = this.state.data.map(item => {
+      if(item.id === id) {
+        item.priority -= 1
+      }
+      return item 
+    })
+    this.setState({
+      data: data
+    })
+  }
   render(){
     return(
-      <form className="App" onSubmit={this.handlerSubmit}>
+      <React.Fragment>
+      <form className="App" onSubmit={this.handleSubmit}>
         <h1 className={classes.container}>TODO APP</h1>
         <div className={classes.wrapper}>
-          <textarea onChange={this.handlerChangeTextarea}  className={classes.formControl} placeholder="Описание"></textarea>
-          <select onChange={this.handlerCustomSelect} className={classes.customSelect}>
+          <textarea onChange={this.handleChangeTextarea}  className={classes.formControl} placeholder="Описание" value={this.state.description}></textarea>
+          <select onChange={this.handleCustomSelect} className={classes.customSelect}>
             {
               this.state.executor.map(value => {
                 return ( 
@@ -85,21 +135,28 @@ class App extends Component {
               })
             }
           </select>
-          <input value={this.state.priority} onChange={this.handlerChangeInput} className={classes.formControlInput} type="text" placeholder="Приоритет"/>
+          <input value={this.state.priority} onChange={this.handleChangeInput} className={classes.formControlInput} type="text" placeholder="Приоритет"/>
           <button type="submit" className={classes.btnPrimary}>Добавить Задачу</button>
         </div>
+      </form> 
         {
-          this.state.data.map((item) => {
+          this.obj = [...this.state.data],
+          this.obj.sort((a,b) => b.priority - a.priority),
+          
+          this.obj.map((item) => {
             return <CardItem 
                       key={item.id}
                       description={item.description}
                       executor={item.executor}
                       id={item.id}
+                      deleteItem={this.handleDelete}
+                      raiseItem={this.handleRaise}
+                      lowerItem={this.handleLower}
                       priority={item.priority}
                     />
           })
         }
-      </form>
+      </React.Fragment>
     );
   }
 }

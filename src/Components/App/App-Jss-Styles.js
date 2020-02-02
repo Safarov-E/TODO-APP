@@ -58,6 +58,9 @@ const styles = {
         fontSize: '25px',
         width: '530px',
         margin: '24px auto',
+    },
+    error: {
+        border: '3px solid red'
     }
 }
 

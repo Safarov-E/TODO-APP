@@ -17,6 +17,7 @@ const styles = {
         padding: '20px 13px',
         boxSizing: 'border-box',
         wordWrap: 'break-word',
+        // whiteSpace: 'pre',
     },
     executor: {
         padding: '0 13px 30px',
@@ -43,7 +44,6 @@ const styles = {
         marginRight: '10px',
         transform: 'translateY(-10px)',
     }
-    
 }
 
 const { classes } = jss.createStyleSheet(styles).attach();
