@@ -14,7 +14,7 @@ class CardItem extends Component {
     handleLower = () => {
         this.props.lowerItem(this.props.id)
     } 
-    render(){
+    render(){ 
         const {description, executor, priority} = this.props;
         return (
             <div className={classes.item}>
